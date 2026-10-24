@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L’ÉTOILE DORÉE // АРХИВ СБ</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background-color: #0a0c10;
             color: #d1d8e0;
             font-family: 'Consolas', 'Courier New', Courier, monospace;
             font-size: 15px;
-            line-height: 1.45;
-            padding: 30px;
+            line-height: 1.5;
+            padding: 20px;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -21,186 +25,397 @@
             background-color: #11151c;
             border: 1px solid #2a3441;
             border-radius: 6px;
-            padding: 25px 35px;
+            padding: 30px;
             max-width: 850px;
             width: 100%;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.85);
         }
 
-        /* Цветовые классы */
+        /* Адаптивная двойная рамка заголовка */
         .header-box {
+            border: 4px double #ffd700;
+            background-color: rgba(255, 215, 0, 0.03);
             color: #ffd700;
             text-shadow: 0 0 6px rgba(255, 215, 0, 0.35);
             font-weight: bold;
+            padding: 14px 18px;
+            margin-bottom: 24px;
         }
 
-        .dossier-title {
+        .header-box div {
+            margin-bottom: 4px;
+        }
+
+        .header-box div:last-child {
+            margin-bottom: 0;
+        }
+
+        .hint {
+            color: #7f8fa6;
+            font-size: 0.9em;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        /* Интерактивные карточки досье */
+        details.dossier {
+            background-color: #151a24;
+            border: 1px solid #263040;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        details.dossier:hover {
+            border-color: #ff3860;
+        }
+
+        details.dossier[open] {
+            border-color: #ff3860;
+            background-color: #131820;
+            box-shadow: 0 0 15px rgba(255, 56, 96, 0.12);
+        }
+
+        /* Заголовок-кнопка досье */
+        summary.dossier-title {
             color: #ff3860;
             font-weight: bold;
+            font-size: 1.05em;
+            padding: 14px 18px;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background-color 0.2s ease;
         }
 
-        .tree {
-            color: #5c6bc0;
+        /* Убираем стандартный треугольник браузера */
+        summary.dossier-title::-webkit-details-marker {
+            display: none;
         }
 
-        .label {
+        summary.dossier-title:hover {
+            background-color: rgba(255, 56, 96, 0.08);
+        }
+
+        .title-text::before {
+            content: "📁 ";
+        }
+
+        details.dossier[open] .title-text::before {
+            content: "📂 ";
+        }
+
+        /* Индикатор состояния справа */
+        .status-badge {
+            font-size: 0.85em;
             color: #00e5ff;
+            background-color: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-left: 12px;
+            flex-shrink: 0;
         }
 
-        .value {
-            color: #ffffff;
+        .status-badge::after {
+            content: "+ ОТКРЫТЬ";
         }
 
-        .price {
-            color: #00ff9d;
-            font-weight: bold;
+        details.dossier[open] .status-badge {
+            color: #7f8fa6;
+            background-color: transparent;
+            border-color: #3d4852;
+        }
+
+        details.dossier[open] .status-badge::after {
+            content: "− СВЕРНУТЬ";
+        }
+
+        /* Внутренняя часть досье с анимацией открытия */
+        .dossier-body {
+            padding: 4px 18px 20px 18px;
+            border-top: 1px dashed #263040;
+            animation: expandDossier 0.25s ease-out;
+        }
+
+        @keyframes expandDossier {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Древовидный список метаданных */
+        .tree-list {
+            list-style: none;
+            padding: 0;
+            margin: 14px 0 18px 0;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .tree-branch {
+            color: #5c6bc0;
+            white-space: pre;
+            margin-right: 8px;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        /* Внутренний блок с отступом */
+        .content-block {
+            padding-left: 18px;
+            border-left: 2px solid #1e2736;
+            margin-left: 6px;
         }
 
         .sub-header {
             color: #ff9f1a;
             font-weight: bold;
+            margin-bottom: 14px;
         }
 
-        .time {
-            color: #7f8fa6;
+        .chat-line {
+            margin-bottom: 10px;
         }
 
-        .user-evelyn {
-            color: #00d2d3;
-            font-weight: bold;
+        .audio-block {
+            margin-bottom: 14px;
         }
 
-        .user-militech {
-            color: #ff6b6b;
-            font-weight: bold;
+        .speaker {
+            display: block;
+            margin-bottom: 2px;
         }
 
-        .voice-1 {
-            color: #ff793f;
-            font-weight: bold;
+        .summary-box {
+            margin-top: 16px;
+            background-color: rgba(253, 203, 110, 0.05);
+            border-left: 3px solid #fdcb6e;
+            padding: 10px 14px;
         }
 
-        .voice-2 {
-            color: #706fd3;
-            font-weight: bold;
-        }
+        /* Цветовые акценты */
+        .label { color: #00e5ff; }
+        .value { color: #ffffff; }
+        .price { color: #00ff9d; font-weight: bold; }
+        .time { color: #7f8fa6; }
+        .user-evelyn { color: #00d2d3; font-weight: bold; }
+        .user-militech { color: #ff6b6b; font-weight: bold; }
+        .voice-1 { color: #ff793f; font-weight: bold; }
+        .voice-2 { color: #706fd3; font-weight: bold; }
+        .sfx { color: #a4b0be; font-style: italic; margin-bottom: 12px; }
+        .quote { color: #f1f2f6; }
+        .summary { color: #ffeaa7; }
+        .summary-label { color: #fdcb6e; font-weight: bold; }
+        .alert { color: #ff5252; margin-bottom: 14px; }
 
-        .sfx {
-            color: #a4b0be;
-            font-style: italic;
-        }
-
-        .quote {
-            color: #f1f2f6;
-        }
-
-        .summary {
-            color: #ffeaa7;
-        }
-
-        .summary-label {
-            color: #fdcb6e;
-            font-weight: bold;
-        }
-
-        .divider {
-            color: #3d4852;
-        }
-
-        .alert {
-            color: #ff5252;
+        .pincode-wrapper {
+            margin: 14px 0 8px 0;
         }
 
         .pincode {
+            display: inline-block;
             color: #00ff66;
             background-color: rgba(0, 255, 102, 0.12);
-            padding: 2px 6px;
-            border-radius: 3px;
+            border: 1px solid rgba(0, 255, 102, 0.35);
+            padding: 4px 10px;
+            border-radius: 4px;
             font-weight: bold;
             text-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
+        }
+
+        /* Оптимизация под экраны смартфонов */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                font-size: 13.5px;
+            }
+            .terminal {
+                padding: 16px;
+            }
+            .header-box {
+                padding: 10px 12px;
+                font-size: 12.5px;
+            }
+            summary.dossier-title {
+                padding: 12px;
+                font-size: 0.98em;
+            }
+            .status-badge {
+                font-size: 0.75em;
+                padding: 2px 6px;
+            }
+            .dossier-body {
+                padding: 4px 12px 16px 12px;
+            }
+            .content-block {
+                padding-left: 12px;
+                margin-left: 2px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="terminal"><span class="header-box">╔══════════════════════════════════════════════════════════════════════╗
-║  L’ÉTOILE DORÉE // СЛУЖБА ВНУТРЕННЕГО КОНТРОЛЯ ("ЗОЛОТОЕ УХО")       ║
-║  КАТАЛОГ: VIP_BLACKMAIL_RESERVE [ТОЛЬКО ДЛЯ ДИРЕКТОРАТА ОТЕЛЯ]       ║
-║  УРОВЕНЬ ШИФРОВАНИЯ: DV 10 (Архив прослушки номеров и VIP-зон)       ║
-╚══════════════════════════════════════════════════════════════════════╝</span>
+<div class="terminal">
+    <!-- Шапка терминала -->
+    <div class="header-box">
+        <div>L’ÉTOILE DORÉE // СЛУЖБА ВНУТРЕННЕГО КОНТРОЛЯ ("ЗОЛОТОЕ УХО")</div>
+        <div>КАТАЛОГ: VIP_BLACKMAIL_RESERVE [ТОЛЬКО ДЛЯ ДИРЕКТОРАТА ОТЕЛЯ]</div>
+        <div>УРОВЕНЬ ШИФРОВАНИЯ: DV 10 (Архив прослушки номеров и VIP-зон)</div>
+    </div>
 
-<span class="dossier-title">📂 ДОСЬЕ #A-114: «КРЫСА НА КОРАБЛЕ»</span>
-<span class="tree">├──</span> <span class="label">Объект:</span> <span class="value">Эвелин Дюран (Continental Brands)</span>
-<span class="tree">├──</span> <span class="label">Источник:</span> <span class="value">Перехват локального трафика Агента (Узел Wi-Fi Террасы)</span>
-<span class="tree">└──</span> <span class="label">Оценочная стоимость на рынке информации:</span> <span class="price">~500 eb (Для Милли Вокс)</span>
+    <div class="hint">&gt; Выберите файл досье для расшифровки и просмотра содержимого:</div>
 
-   <span class="sub-header">[ПЕРЕХВАЧЕННЫЙ ЧАТ // ЗАШИФРОВАННЫЙ КАНАЛ MILITECH_HR_SECURE]</span>
-   
-   <span class="time">[19:42]</span> <span class="user-evelyn">&lt;E_Durand&gt;:</span> <span class="quote">Презентация прошла успешно. Совет директоров 
-           Continental в восторге от нейро-маршрутизатора Embrace. 
-           Они думают, у них монополия.</span>
-   <span class="time">[19:43]</span> <span class="user-militech">&lt;MT_Recruiter_7&gt;:</span> <span class="quote">Отличная работа, мисс Дюран. Ваша 
-           резервная копия чертежей прошла валидацию в нашей лаборатории.</span>
-   <span class="time">[19:44]</span> <span class="user-evelyn">&lt;E_Durand&gt;:</span> <span class="quote">Когда эвакуация? Если СБ Continental узнает, 
-           что я скопировала код перед передачей в архив — меня 
-           растворят в био-реакторе.</span>
-   <span class="time">[19:45]</span> <span class="user-militech">&lt;MT_Recruiter_7&gt;:</span> <span class="quote">Борт Militech ждет вас во вторник в 04:00, 
-           космопорт Найт-Сити. Ваш новый контракт и охрана готовы. 
-           Главное — улыбайтесь сегодня вечером и пейте шампанское.</span>
+    <!-- ДОСЬЕ 1 -->
+    <details class="dossier">
+        <summary class="dossier-title">
+            <span class="title-text">ДОСЬЕ #A-114: «КРЫСА НА КОРАБЛЕ»</span>
+            <span class="status-badge"></span>
+        </summary>
+        <div class="dossier-body">
+            <ul class="tree-list">
+                <li class="tree-item">
+                    <span class="tree-branch">├──</span>
+                    <div><span class="label">Объект:</span> <span class="value">Эвелин Дюран (Continental Brands)</span></div>
+                </li>
+                <li class="tree-item">
+                    <span class="tree-branch">├──</span>
+                    <div><span class="label">Источник:</span> <span class="value">Перехват локального трафика Агента (Узел Wi-Fi Террасы)</span></div>
+                </li>
+                <li class="tree-item">
+                    <span class="tree-branch">└──</span>
+                    <div><span class="label">Оценочная стоимость на рынке информации:</span> <span class="price">~500 eb (Для Милли Вокс)</span></div>
+                </li>
+            </ul>
 
-   <span class="summary-label">📝 Резюме СБ Отеля:</span> <span class="summary">Эвелин продает украденную технологию второй раз 
-      налево и готовится к побегу в Militech. При упоминании рейса 
-      "Во вторник в 04:00" пойдет на любые уступки.</span>
+            <div class="content-block">
+                <div class="sub-header">[ПЕРЕХВАЧЕННЫЙ ЧАТ // ЗАШИФРОВАННЫЙ КАНАЛ MILITECH_HR_SECURE]</div>
 
-<span class="divider">────────────────────────────────────────────────────────────────────────</span>
+                <div class="chat-line">
+                    <span class="time">[19:42]</span> <span class="user-evelyn">&lt;E_Durand&gt;:</span>
+                    <span class="quote">Презентация прошла успешно. Совет директоров Continental в восторге от нейро-маршрутизатора Embrace. Они думают, у них монополия.</span>
+                </div>
+                <div class="chat-line">
+                    <span class="time">[19:43]</span> <span class="user-militech">&lt;MT_Recruiter_7&gt;:</span>
+                    <span class="quote">Отличная работа, мисс Дюран. Ваша резервная копия чертежей прошла валидацию в нашей лаборатории.</span>
+                </div>
+                <div class="chat-line">
+                    <span class="time">[19:44]</span> <span class="user-evelyn">&lt;E_Durand&gt;:</span>
+                    <span class="quote">Когда эвакуация? Если СБ Continental узнает, что я скопировала код перед передачей в архив — меня растворят в био-реакторе.</span>
+                </div>
+                <div class="chat-line">
+                    <span class="time">[19:45]</span> <span class="user-militech">&lt;MT_Recruiter_7&gt;:</span>
+                    <span class="quote">Борт Militech ждет вас во вторник в 04:00, космопорт Найт-Сити. Ваш новый контракт и охрана готовы. Главное — улыбайтесь сегодня вечером и пейте шампанское.</span>
+                </div>
 
-<span class="dossier-title">📂 ДОСЬЕ #B-809: «СЕМЕЙНЫЙ СКЕЛЕТ В ПОДВАЛЕ»</span>
-<span class="tree">├──</span> <span class="label">Объект:</span> <span class="value">Маркус Вайс (Embrace Group)</span>
-<span class="tree">├──</span> <span class="label">Источник:</span> <span class="value">Лазерный микрофон (Люкс №3904, час назад до приема)</span>
-<span class="tree">└──</span> <span class="label">Оценочная стоимость на рынке информации:</span> <span class="price">~700 eb (Или личный рычаг)</span>
+                <div class="summary-box">
+                    <span class="summary-label">📝 Резюме СБ Отеля:</span>
+                    <span class="summary">Эвелин продает украденную технологию второй раз налево и готовится к побегу в Militech. При упоминании рейса "Во вторник в 04:00" пойдет на любые уступки.</span>
+                </div>
+            </div>
+        </div>
+    </details>
 
-   <span class="sub-header">[АУДИО-ТРАНСКРИПЦИЯ // ЗАПИСЬ #3904-AUDIO.WAV]</span>
-   <span class="sfx">*(Звук бьющегося о стену стакана, тяжелое дыхание)*</span>
-   
-   <span class="voice-1">ГОЛОС 1 (Маркус Вайс):</span> 
-   <span class="quote">«...Мне плевать, что она твоя дочь, Ричард! Твой подпольный 
-   эксперимент в Пасифике стоил мне лучшего отряда зачистки и боевого 
-   борга! Мой отдел вытаскивал этого чертова нетраннера Дэдэ из машины, 
-   пока твоя маленькая "богиня" Аша жгла мозги клеркам через вентиляцию 
-   и сеть!»</span>
+    <!-- ДОСЬЕ 2 -->
+    <details class="dossier">
+        <summary class="dossier-title">
+            <span class="title-text">ДОСЬЕ #B-809: «СЕМЕЙНЫЙ СКЕЛЕТ В ПОДВАЛЕ»</span>
+            <span class="status-badge"></span>
+        </summary>
+        <div class="dossier-body">
+            <ul class="tree-list">
+                <li class="tree-item">
+                    <span class="tree-branch">├──</span>
+                    <div><span class="label">Объект:</span> <span class="value">Маркус Вайс (Embrace Group)</span></div>
+                </li>
+                <li class="tree-item">
+                    <span class="tree-branch">├──</span>
+                    <div><span class="label">Источник:</span> <span class="value">Лазерный микрофон (Люкс №3904, час назад до приема)</span></div>
+                </li>
+                <li class="tree-item">
+                    <span class="tree-branch">└──</span>
+                    <div><span class="label">Оценочная стоимость на рынке информации:</span> <span class="price">~700 eb (Или личный рычаг)</span></div>
+                </li>
+            </ul>
 
-   <span class="voice-2">ГОЛОС 2 (Помехи связи, предположительно Ричард Вонг — Совет директоров):</span> 
-   <span class="quote">«Заткнись, Маркус! Проект "Душегуб-2" не должен всплыть в отчетах 
-   перед Токио. Спиши все на атаку банды Wraith!»</span>
+            <div class="content-block">
+                <div class="sub-header">[АУДИО-ТРАНСКРИПЦИЯ // ЗАПИСЬ #3904-AUDIO.WAV]</div>
+                <div class="sfx">*(Звук бьющегося о стену стакана, тяжелое дыхание)*</div>
 
-   <span class="voice-1">ГОЛОС 1 (Маркус Вайс):</span> 
-   <span class="quote">«Поздно! Она ушла в локальный Data Pool Пасифики! И кто-то слил 
-   ключи от наших турелей налетчикам за десять минут до штурма. 
-   Подпись в логах — "Caesar-Prime". Если на сегодняшнем вечере кто-то 
-   из прессы пронюхает про подвал и фамилию Вонг — мы оба трупы!»</span>
-   <span class="sfx">*(Конец записи)*</span>
+                <div class="audio-block">
+                    <span class="speaker voice-1">ГОЛОС 1 (Маркус Вайс):</span>
+                    <span class="quote">«...Мне плевать, что она твоя дочь, Ричард! Твой подпольный эксперимент в Пасифике стоил мне лучшего отряда зачистки и боевого борга! Мой отдел вытаскивал этого чертова нетраннера Дэдэ из машины, пока твоя маленькая "богиня" Аша жгла мозги клеркам через вентиляцию и сеть!»</span>
+                </div>
 
-   <span class="summary-label">📝 Резюме СБ Отеля:</span> <span class="summary">Вайс на грани срыва. Прямое доказательство 
-      незаконных опытов над людьми внутри Embrace Group.</span> 
+                <div class="audio-block">
+                    <span class="speaker voice-2">ГОЛОС 2 (Помехи связи, предположительно Ричард Вонг — Совет директоров):</span>
+                    <span class="quote">«Заткнись, Маркус! Проект "Душегуб-2" не должен всплыть в отчетах перед Токио. Спиши все на атаку банды Wraith!»</span>
+                </div>
 
-<span class="divider">────────────────────────────────────────────────────────────────────────</span>
+                <div class="audio-block">
+                    <span class="speaker voice-1">ГОЛОС 1 (Маркус Вайс):</span>
+                    <span class="quote">«Поздно! Она ушла в локальный Data Pool Пасифики! И кто-то слил ключи от наших турелей налетчикам за десять минут до штурма. Подпись в логах — "Caesar-Prime". Если на сегодняшнем вечере кто-то из прессы пронюхает про подвал и фамилию Вонг — мы оба трупы!»</span>
+                </div>
 
-<span class="dossier-title">📂 ДОСЬЕ #S-000: «СЛУЖЕБНАЯ ХАЛАТНОСТЬ (ДЛЯ ВНУТРЕННЕГО ШАНТАЖА)»</span>
-<span class="tree">├──</span> <span class="label">Объект:</span> <span class="value">Начальник смены охраны 40-го этажа (Сержант Ковальски)</span>
-<span class="tree">├──</span> <span class="label">Источник:</span> <span class="value">Логи мастер-ключей оружейной комнаты у лифтов</span>
-<span class="tree">└──</span> <span class="label">Применение:</span> <span class="price">Мгновенный доступ к конфискованному снаряжению гостей</span>
+                <div class="sfx">*(Конец записи)*</div>
 
-   <span class="sub-header">[АВТОМАТИЧЕСКОЕ УВЕДОМЛЕНИЕ СИСТЕМЫ]</span>
-   <span class="alert">Зафиксировано нарушение протокола ротации паролей. Сержант Ковальски 
-   снова сбросил мастер-код от биометрических сейфов изъятого оружия 
-   гостей (Сейфы #01 — #20 у главного лифта) на дефолтную комбинацию, 
-   чтобы не забыть ее после смены.</span>
+                <div class="summary-box">
+                    <span class="summary-label">📝 Резюме СБ Отеля:</span>
+                    <span class="summary">Вайс на грани срыва. Прямое доказательство незаконных опытов над людьми внутри Embrace Group.</span>
+                </div>
+            </div>
+        </div>
+    </details>
 
-   <span class="pincode">🔑 ТЕКУЩИЙ РУЧНОЙ ПИН-КОД ОРУЖЕЙНЫХ СЕЙФОВ: [ 0 4 5 1 ]</span>
-   <span class="sfx">*(Примечание: Ввод кода с физической панели на посту охраны отключает 
-   блокировку всех ячеек без поднятия сетевой тревоги).*</span></div>
+    <!-- ДОСЬЕ 3 -->
+    <details class="dossier">
+        <summary class="dossier-title">
+            <span class="title-text">ДОСЬЕ #S-000: «СЛУЖЕБНАЯ ХАЛАТНОСТЬ (ДЛЯ ВНУТРЕННЕГО ШАНТАЖА)»</span>
+            <span class="status-badge"></span>
+        </summary>
+        <div class="dossier-body">
+            <ul class="tree-list">
+                <li class="tree-item">
+                    <span class="tree-branch">├──</span>
+                    <div><span class="label">Объект:</span> <span class="value">Начальник смены охраны 40-го этажа (Сержант Ковальски)</span></div>
+                </li>
+                <li class="tree-item">
+                    <span class="tree-branch">├──</span>
+                    <div><span class="label">Источник:</span> <span class="value">Логи мастер-ключей оружейной комнаты у лифтов</span></div>
+                </li>
+                <li class="tree-item">
+                    <span class="tree-branch">└──</span>
+                    <div><span class="label">Применение:</span> <span class="price">Мгновенный доступ к конфискованному снаряжению гостей</span></div>
+                </li>
+            </ul>
+
+            <div class="content-block">
+                <div class="sub-header">[АВТОМАТИЧЕСКОЕ УВЕДОМЛЕНИЕ СИСТЕМЫ]</div>
+                <div class="alert">
+                    Зафиксировано нарушение протокола ротации паролей. Сержант Ковальски снова сбросил мастер-код от биометрических сейфов изъятого оружия гостей (Сейфы #01 — #20 у главного лифта) на дефолтную комбинацию, чтобы не забыть ее после смены.
+                </div>
+
+                <div class="pincode-wrapper">
+                    <span class="pincode">🔑 ТЕКУЩИЙ РУЧНОЙ ПИН-КОД ОРУЖЕЙНЫХ СЕЙФОВ: [ 0 4 5 1 ]</span>
+                </div>
+                <div class="sfx">*(Примечание: Ввод кода с физической панели на посту охраны отключает блокировку всех ячеек без поднятия сетевой тревоги).*</div>
+            </div>
+        </div>
+    </details>
+</div>
 
 </body>
 </html>
